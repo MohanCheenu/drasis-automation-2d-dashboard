@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dimmable Light Card</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: transparent;
+    }
+
+    .light-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 18px;
+      width: 340px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .light-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .light-header i {
+      font-size: 40px;
+      color: rgba(255, 255, 255, 0.2);
+      transition: color 0.3s;
+    }
+
+    .light-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .light-status {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .slider-box {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      height: 40px;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      padding: 6px 4px;
+    }
+
+    .slider {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    /* Hide default thumb */
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 0;
+      height: 0;
+    }
+    .slider::-moz-range-thumb {
+      width: 0;
+      height: 0;
+      border: none;
+    }
+
+    /* Warmth gradient */
+    #warmth {
+      background: linear-gradient(90deg, #ff9c33, #ffffff);
+    }
+
+    /* Needle for warmth */
+    .indicator {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #fff;
+      border-radius: 2px;
+      pointer-events: none;
+      transition: left 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="light-card">
+    <div class="light-header">
+      <i class="fas fa-lightbulb" id="bulb"></i>
+      <div>
+        <div class="light-name">SQUARE SPOTS Light</div>
+        <div class="light-status" id="status">Off</div>
+      </div>
+    </div>
+
+    <!-- Brightness control -->
+    <div class="slider-box">
+      <input type="range" min="0" max="100" value="0" class="slider" id="brightness">
+    </div>
+
+    <!-- Warmth control -->
+    <div class="slider-box">
+      <input type="range" min="0" max="100" value="50" class="slider" id="warmth">
+      <div class="indicator" id="warmth-ind"></div>
+    </div>
+  </div>
+
+  <script>
+    const bulb = document.getElementById("bulb");
+    const status = document.getElementById("status");
+    const brightnessSlider = document.getElementById("brightness");
+    const warmthSlider = document.getElementById("warmth");
+    const warmthInd = document.getElementById("warmth-ind");
+
+    function updateBulb() {
+      let brightness = +brightnessSlider.value;
+      let warmth = +warmthSlider.value;
+
+      // Warmth = blend between orange (#ff9c33) and white (#ffffff)
+      let r = 255;
+      let g = Math.round(156 + (255 - 156) * (warmth / 100));
+      let b = Math.round(51 + (255 - 51) * (warmth / 100));
+
+      if (brightness === 0) {
+        bulb.style.color = "rgba(0,0,0,0.3)";
+        status.textContent = "Off";
+        brightnessSlider.style.background = "#000"; // black when off
+      } else {
+        // Scale brightness → mix with black
+        let factor = brightness / 100;
+        let br = Math.round(r * factor);
+        let bg = Math.round(g * factor);
+        let bb = Math.round(b * factor);
+
+        bulb.style.color = `rgb(${br},${bg},${bb})`;
+        status.textContent = `${brightness}% Bright`;
+
+        // Brightness slider background = black → white fill
+        brightnessSlider.style.background =
+          `linear-gradient(90deg, #fff ${brightness}%, #000 ${brightness}%)`;
+      }
+
+      // Move needle for warmth
+      const wPercent = (warmth / 100) * warmthSlider.offsetWidth;
+      warmthInd.style.left = `${wPercent}px`;
+    }
+
+    brightnessSlider.addEventListener("input", updateBulb);
+    warmthSlider.addEventListener("input", updateBulb);
+
+    updateBulb();
+  </script>
+
+</body>
+</html>
+    

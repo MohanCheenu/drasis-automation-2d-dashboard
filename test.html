@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curtain Control Slider</title>
+
+  <!-- Curtain Icon CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    .curtain-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .curtain-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .curtain-header i {
+      font-size: 36px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .curtain-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    #curtainStatus {
+      font-size: 15px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .slider-box {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 0%, #000 0%);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 0;
+      height: 0;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 0;
+      height: 0;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="curtain-card">
+    <div class="curtain-header">
+      <i class="fas fa-window-maximize"></i>
+      <div class="curtain-name">Living Room Curtain</div>
+    </div>
+
+    <div id="curtainStatus">Closed</div>
+
+    <div class="slider-box">
+      <input type="range" id="curtainSlider" min="0" max="100" value="0" />
+    </div>
+  </div>
+
+  <script>
+    const curtainSlider = document.getElementById("curtainSlider");
+    const curtainStatus = document.getElementById("curtainStatus");
+
+    function updateCurtain() {
+      const value = parseInt(curtainSlider.value);
+
+      // Update gradient fill (dark blue to light blue)
+      curtainSlider.style.background = 
+        `linear-gradient(90deg, #1e3a8a ${value}%, #000 ${value}%)`;
+
+      // Logic for status
+      if (value < 10) {
+        curtainStatus.textContent = "Closed";
+      } 
+      else if (value > 90) {
+        curtainStatus.textContent = "Opened";
+      } 
+      else {
+        curtainStatus.textContent = `${value}% Open`;
+      }
+    }
+
+    curtainSlider.addEventListener("input", updateCurtain);
+    updateCurtain();
+  </script>
+
+</body>
+</html>
